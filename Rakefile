@@ -25,7 +25,7 @@ cmd_hugo_server =
   "#{cmd_hugo_mutagen_start} && " \
   "trap \"#{cmd_hugo_mutagen_stop}\" INT; " \
   'hugo server ' \
-  '--source /project/src; '\
+  '--source /project/src/default; '\
   'trap - INT' \
   ')'
 
@@ -33,5 +33,19 @@ namespace :hugo do
   desc 'Run hugo server on localhost:1313'
   task :server do
     @commands << cmd_hugo_server
+  end
+
+  namespace :mutagen do |env|
+    subtasks(env.scope.path) do
+      desc 'Start mutagen forward of port 1313'
+      task :start do
+        @commands << cmd_hugo_mutagen_start
+      end
+
+      desc 'Stop mutagen forward of port 1313'
+      task :stop do
+        @commands << cmd_hugo_mutagen_stop
+      end
+    end
   end
 end
