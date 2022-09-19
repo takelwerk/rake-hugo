@@ -25,9 +25,13 @@ cmd_hugo_server =
   "#{cmd_hugo_mutagen_start} && " \
   "trap \"#{cmd_hugo_mutagen_stop}\" INT; " \
   'hugo server ' \
-  '--source /project/src/default; '\
+  '--source $(readlink -f /project/src/default); '\
   'trap - INT' \
   ')'
+# hugo has problems reading git infos
+# from a symlinked doc root as /project/src/default
+# so to enable {{ .GitInfo | jsonify }}
+# we have to get the symlink target with readlink -f
 
 namespace :hugo do
   desc 'Run hugo server on localhost:1313'
